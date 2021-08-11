@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-//import "./Governance.sol";
+import "./Governance.sol";
 //import "./Access.sol";
 //import "./GovernanceToken.sol";
 //import "./Treasury.sol";
@@ -11,7 +11,7 @@ pragma solidity ^0.8.6;
 contract Dao {
     //GovernanceToken private _token;
     //Access private _access;
-    //Governance private _governance;
+    Governance private _governance;
     //Treasury private _treasury;
     //Management private _management;
 
