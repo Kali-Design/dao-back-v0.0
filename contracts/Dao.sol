@@ -6,7 +6,7 @@ import "./Governance.sol";
 import "./Access.sol";
 import "./GovernanceToken.sol";
 import "./Treasury.sol";
-//import "./Management.sol";
+import "./Management.sol";
 
 contract Dao {
     //GovernanceToken private _token;
