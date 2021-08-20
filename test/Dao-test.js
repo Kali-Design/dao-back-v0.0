@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-vars */
 
+const { accounts, contract } = require('@openzeppelin/test-environment');
+const { time } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
+const DaoFactory = contract.fromArtifact('DaoFactory');
 
 describe('Dao', async function () {
-  let Dao, dao, dev, alice, bob;
+  const [Dao, dao, dev, alice, bob] = accounts;
   const TOKEN_NAME = 'Business 1 Token';
   const TOKEN_SYMBOL = 'BS1';
   const DEFAULT_ADMIN_ROLE = ethers.utils.id('DEFAULT_ADMIN_ROLE');
