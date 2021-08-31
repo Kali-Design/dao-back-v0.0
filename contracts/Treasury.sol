@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.6;
 
+import "./Dao.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
 contract Treasury {
@@ -12,67 +13,122 @@ contract Treasury {
         uint256 amount;
         uint256 createdAt;
         bool active;
+        uint256 counter;
     }
 
     event Created(uint256 id, string name, address receiver, uint256 amount, uint256 timestamp);
     event Canceled(uint256 id, string name, address receiver, uint256 amount, uint256 timestamp);
     event Received(address sender, uint256 amount, uint256 timestamp);
+    event Withdrew(address reiceiver, uint256 amount, uint256 timestamp);
     event Sended(address receiver, uint256 amount, uint256 timestamp);
 
+    Dao private _dao;
     mapping(uint256 => Charge) private _charges;
     uint256 private _counter;
+
+    constructor() {
+        _dao = Dao(msg.sender);
+    }
 
     function feed() public payable {
         emit Received(msg.sender, msg.value, block.timestamp);
     }
-    function simpleTransfer(address receiver_, uint amount_) public returns (bool) {
+
+    function simpleTransfer(address receiver_, uint256 amount_) public returns (bool) {
+        require(
+            _dao.hasRole(_dao.TREASURIER_ROLE(), msg.sender),
+            "Treasury: only Treasurier Role can use this function"
+        );
         payable(receiver_).sendValue(amount_);
         emit Sended(receiver_, amount_, block.timestamp);
         return true;
-    } 
+    }
+
     function addCharge(
         string memory name_,
         address receiver_,
         uint256 amount_
     ) public returns (bool) {
+        require(
+            _dao.hasRole(_dao.TREASURIER_ROLE(), msg.sender),
+            "Treasury: only Treasurier Role can use this function"
+        );
         _counter++;
         _charges[_counter] = Charge({
             name: name_,
             receiver: receiver_,
             amount: amount_,
             createdAt: block.timestamp,
-            active: true
+            active: true,
+            counter: 0
         });
         emit Created(_counter, name_, receiver_, amount_, block.timestamp);
         return true;
     }
+
     function cancelCharge(uint256 id) public returns (bool) {
+        require(
+            _dao.hasRole(_dao.TREASURIER_ROLE(), msg.sender),
+            "Treasury: only Treasurier Role can use this function"
+        );
         _charges[id].active = false;
-        emit Canceled(id, nameAt(id), receiverAt(id), amountAt(id), block.timestamp);
+        emit Canceled(id, nameOf(id), receiverOf(id), amountOf(id), block.timestamp);
         return true;
     }
+
     function payCharge(uint256 id) public returns (bool) {
-        require(activeAt(id));
-        payable(receiverAt(id)).sendValue(amountAt(id));
-        emit Sended(receiverAt(id), amountAt(id), block.timestamp);
+        require(
+            _dao.hasRole(_dao.TREASURIER_ROLE(), msg.sender),
+            "Treasury: only Treasurier Role can use this function"
+        );
+        require(activeOf(id));
+        _charges[id].counter++;
+        payable(receiverOf(id)).sendValue(amountOf(id));
+        emit Sended(receiverOf(id), amountOf(id), block.timestamp);
         return true;
     }
+
+    function withdraw(uint256 amount) public returns (bool) {
+        require(_dao.hasRole(_dao.ADMIN_ROLE(), msg.sender), "Treasury: only Admin Role can use this function");
+        require(totalTreasury() >= amount, "Treasury: cannot withdraw more than total treasury");
+        payable(msg.sender).sendValue(amount);
+        emit Withdrew(msg.sender, amount, block.timestamp);
+        return true;
+    }
+
+    function withdrawAll() public returns (bool) {
+        require(_dao.hasRole(_dao.ADMIN_ROLE(), msg.sender), "Treasury: only Admin Role can use this function");
+        uint256 amount = totalTreasury();
+        payable(msg.sender).sendValue(amount);
+        emit Withdrew(msg.sender, amount, block.timestamp);
+        return true;
+    }
+
     function totalTreasury() public view returns (uint256) {
         return address(this).balance;
     }
-    function nameAt(uint256 id) public view returns (string memory) {
+
+    function nameOf(uint256 id) public view returns (string memory) {
         return _charges[id].name;
     }
-    function receiverAt(uint256 id) public view returns (address) {
+
+    function receiverOf(uint256 id) public view returns (address) {
         return _charges[id].receiver;
     }
-    function amountAt(uint256 id) public view returns (uint256) {
+
+    function amountOf(uint256 id) public view returns (uint256) {
         return _charges[id].amount;
     }
-    function creationAt(uint256 id) public view returns (uint256) {
+
+    function creationOf(uint256 id) public view returns (uint256) {
         return _charges[id].createdAt;
     }
-    function activeAt(uint256 id) public view returns (bool) {
+
+    function activeOf(uint256 id) public view returns (bool) {
         return _charges[id].active;
+    }
+
+    function counterOf(uint256 id) public view returns (uint256) {
+        return _charges[id].counter;
     }
 }
