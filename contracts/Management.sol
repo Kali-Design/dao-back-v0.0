@@ -14,7 +14,7 @@ contract Management {
         uint256 employedAt;
         uint256 lastPayout;
     }
-
+    //event
     event Received(address sender, uint256 amount, uint256 timestamp);
     event Employed(uint256 id, address account, uint256 salary, uint256 timestamp);
     event Fired(uint256 id, address account, uint256 timestamp);
