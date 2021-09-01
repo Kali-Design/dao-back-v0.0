@@ -7,7 +7,7 @@ const { expect } = require('chai');
 const DaoFactory = contract.fromArtifact('DaoFactory');
 
 describe('DaoFactory', async function () {
-  const [DaoFactory, daoFactory, dev, alice, bob] = accounts;
+  const [DaoFactory, daoFactory, dev, alice, CREATE] = accounts;
   const NAME = 'Test 1 Token';
   const URL = 'https://www.test1';
   const TOKEN_NAME = `${NAME} Token`;
@@ -15,11 +15,11 @@ describe('DaoFactory', async function () {
   const ID = 1;
 
   beforeEach(async function () {
-    [dev, alice, bob] = await ethers.getSigners();
+    [dev, alice] = await ethers.getSigners();
     DaoFactory = await ethers.getContractFactory('DaoFactory');
     daoFactory = await DaoFactory.connect(dev).deploy();
     await daoFactory.deploy (); //deploy-DaoFactory
-    await daoFactory.connect(alice).create(NAME, URL, TOKEN_NAME, TOKEN_SYMBOL);
+    CREATE = await daoFactory.connect(alice).create(NAME, URL, TOKEN_NAME, TOKEN_SYMBOL);
   });
 
   it('should create a Test with good name', async function () {
