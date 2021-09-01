@@ -8,10 +8,10 @@ const DaoFactory = contract.fromArtifact('DaoFactory');
 
 describe('DaoFactory', async function () {
   const [DaoFactory, daoFactory, dev, alice, bob] = accounts;
-  const NAME = 'Test 1';
+  const NAME = 'Test 1 Token';
   const URL = 'https://www.test1';
   const TOKEN_NAME = `${NAME} Token`;
-  const TOKEN_SYMBOL = 'BS1';
+  const TOKEN_SYMBOL = 'HM1';
   const ID = 1;
 
   beforeEach(async function () {

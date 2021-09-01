@@ -8,8 +8,8 @@ const DaoFactory = contract.fromArtifact('DaoFactory');
 
 describe('Dao', async function () {
   const [Dao, dao, dev, alice, bob] = accounts;
-  const TOKEN_NAME = 'Business 1 Token';
-  const TOKEN_SYMBOL = 'BS1';
+  const TOKEN_NAME = 'Test 1 Token';
+  const TOKEN_SYMBOL = 'HM1';
   const DEFAULT_ADMIN_ROLE = ethers.utils.id('DEFAULT_ADMIN_ROLE');
   beforeEach(async function () {
     [dev, alice, bob] = await ethers.getSigners();
