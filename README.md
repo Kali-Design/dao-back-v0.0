@@ -7,7 +7,22 @@
 
 ## README.md 
 
-- **Working progress**
+- Contracts Language and NatSpec: Solidity v0.8.6
+- Test and Scripts Environnement: Truffle
+- @openzeppelin/contracts
+- dotenv
+
+### Test library
+
+- Chai
+- Ethers Js
+
+### Add your environnement variable in .env
+
+```
+INFURA_PROJECT_ID=""
+DEPLOYER_PRIVATE_KEY=""
+```
 
 ## Auteur
 
