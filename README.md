@@ -11,11 +11,22 @@
 - Test and Scripts Environnement: Truffle
 - @openzeppelin/contracts
 - dotenv
+- prettier
+- eslint
+- solhint
 
 ### Test library
 
 - Chai
 - Ethers Js
+
+```
+DaoFactory
+├── Dao ── AccessControl
+│   ├── Governance ── ERC20
+│   ├── Treasury
+│   └── Management
+```
 
 ### Add your environnement variable in .env
 
